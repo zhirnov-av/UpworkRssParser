@@ -1,7 +1,9 @@
-package ru.za.services.upwork.parser;
+package ru.za.services.upwork.parser.settings;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import ru.za.services.upwork.parser.KeywordsList;
+import ru.za.services.upwork.parser.RssUrl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,6 +18,7 @@ public class UserSettings {
     private ArrayList<String> neededWords = new ArrayList<>();
 
     private KeywordsList keywords = new KeywordsList();
+    private KeywordsList exceptKeywords = new KeywordsList();
 
     private String regEx = "";
 
@@ -27,6 +30,14 @@ public class UserSettings {
 
     public KeywordsList getKeywords() {
         return keywords;
+    }
+
+    public KeywordsList getExceptKeywords() {
+        return exceptKeywords;
+    }
+
+    public void setExceptKeywords(KeywordsList exceptKeywords) {
+        this.exceptKeywords = exceptKeywords;
     }
 
     @Deprecated
@@ -110,8 +121,8 @@ public class UserSettings {
         */
 
         keywords.addKeyword("java", 100);
-        keywords.addKeyword("simple", 100);
-        keywords.addKeyword("console", 100);
+        keywords.addKeyword("simple", 70);
+        keywords.addKeyword("console", 70);
         keywords.addKeyword("pdf", 100);
         keywords.addKeyword("itext", 100);
         keywords.addKeyword("pdfbox", 100);
@@ -120,13 +131,18 @@ public class UserSettings {
         keywords.addKeyword("webservice", 100);
         keywords.addKeyword("SOAP", 100);
         keywords.addKeyword("SQL", 100);
+        keywords.addKeyword("CSV", 100);
         keywords.addKeyword("ORACLE", 100);
+        keywords.addKeyword("C#", 30);
+        keywords.addKeyword("C/C\\+\\+", 30);
 
-        keywords.addKeyword("C#", 50);
-
-        keywords.addKeyword("php", 0);
-        keywords.addKeyword("javascript", 0);
-        keywords.addKeyword("wordpress", 0);
+        exceptKeywords.addKeyword("php", 50);
+        exceptKeywords.addKeyword("javascript", 100);
+        exceptKeywords.addKeyword("wordpress", 100);
+        exceptKeywords.addKeyword("mining", 100);
+        exceptKeywords.addKeyword("arduino", 100);
+        exceptKeywords.addKeyword("blockchain", 100);
+        exceptKeywords.addKeyword("bitcoin", 100);
 
         email = (String)object.get("email");
         try{

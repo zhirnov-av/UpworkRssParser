@@ -1,14 +1,9 @@
 package ru.za.services.upwork;
 
-import org.json.JSONObject;
-import ru.za.services.upwork.parser.Parser;
-import ru.za.services.upwork.parser.RssUrl;
-import ru.za.services.upwork.parser.UserSettings;
 import ru.za.services.upwork.rss.Feed;
 import ru.za.services.upwork.rss.RSSFeedParser;
 
 import java.io.File;
-import java.util.Date;
 
 public class TestMain {
 

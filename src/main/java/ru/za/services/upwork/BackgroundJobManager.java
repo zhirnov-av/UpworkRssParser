@@ -6,7 +6,7 @@ import org.glassfish.jersey.server.monitoring.ApplicationEvent;
 import org.glassfish.jersey.server.monitoring.ApplicationEventListener;
 import org.glassfish.jersey.server.monitoring.RequestEvent;
 import org.glassfish.jersey.server.monitoring.RequestEventListener;
-import ru.za.services.upwork.parser.ParserSettings;
+import ru.za.services.upwork.parser.settings.ParserSettings;
 
 
 public class BackgroundJobManager implements ApplicationEventListener {

@@ -2,9 +2,10 @@ package ru.za.services.upwork.parser;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.za.services.upwork.parser.settings.ParserSettings;
+import ru.za.services.upwork.parser.settings.UserSettings;
 import ru.za.services.upwork.rss.Feed;
 import ru.za.services.upwork.rss.RSSFeedParser;
-import ru.za.services.upwork.rss.UpworkFeed;
 
 import javax.xml.stream.XMLStreamException;
 

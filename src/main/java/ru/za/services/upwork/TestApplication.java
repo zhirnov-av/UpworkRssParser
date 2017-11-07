@@ -3,16 +3,8 @@ package ru.za.services.upwork;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.za.services.upwork.parser.Parser;
-import ru.za.services.upwork.parser.ParserSettings;
-import ru.za.services.upwork.rss.Feed;
-import ru.za.services.upwork.rss.RSSFeedParser;
-import ru.za.services.upwork.rss.UpworkFeed;
+import ru.za.services.upwork.parser.settings.ParserSettings;
 
-import javax.annotation.Resource;
-import javax.xml.stream.XMLStreamException;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 

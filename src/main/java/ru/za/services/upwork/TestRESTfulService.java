@@ -1,27 +1,15 @@
 package ru.za.services.upwork;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
-import javax.servlet.http.HttpServlet;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.glassfish.jersey.server.monitoring.ApplicationEvent;
-import org.glassfish.jersey.server.monitoring.ApplicationEventListener;
-import org.glassfish.jersey.server.monitoring.RequestEvent;
-import org.glassfish.jersey.server.monitoring.RequestEventListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
-import ru.za.services.upwork.parser.ParserSettings;
-import ru.za.services.upwork.parser.UserSettings;
-
-import java.awt.*;
-import java.io.Serializable;
-import java.util.ArrayList;
+import ru.za.services.upwork.parser.settings.ParserSettings;
+import ru.za.services.upwork.parser.settings.UserSettings;
 
 @Path("/Service")
 public class TestRESTfulService {

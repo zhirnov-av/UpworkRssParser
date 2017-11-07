@@ -1,9 +1,9 @@
-package ru.za.services.upwork.rss;
+package ru.za.services.upwork.parser.transport;
 
 import org.apache.commons.mail.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.za.services.upwork.parser.ParserSettings;
+import ru.za.services.upwork.parser.settings.ParserSettings;
 
 public class Mailer {
 
