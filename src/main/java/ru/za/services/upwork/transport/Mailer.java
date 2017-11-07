@@ -1,4 +1,4 @@
-package ru.za.services.upwork.parser.transport;
+package ru.za.services.upwork.transport;
 
 import org.apache.commons.mail.*;
 import org.apache.logging.log4j.LogManager;

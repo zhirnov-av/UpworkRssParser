@@ -3,7 +3,7 @@ package ru.za.services.upwork.parser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.za.services.upwork.parser.settings.UserSettings;
-import ru.za.services.upwork.parser.transport.Mailer;
+import ru.za.services.upwork.transport.Mailer;
 import ru.za.services.upwork.rss.Feed;
 import ru.za.services.upwork.rss.FeedMessage;
 
