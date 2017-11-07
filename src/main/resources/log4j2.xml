@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="log-path">../logs/</Property>
+        <!--<Property name="log_path">${log4j:configParentLocation}</Property>-->
+    </Properties>
+    <Appenders>
+        <RollingFile name="RollingFile" fileName="${log-path}/RESTfulService.log"
+            filePattern="${log-path}/RESTfulService-%d{yyyy-MM-dd}-%i.log" >
+
+            <PatternLayout pattern="[%-5level] %d{dd.MM.yyyy HH:mm:ss} %t [%c{1}] - %msg%n">
+                <!--
+                <MarkerPatternSelector defaultPattern="[%-5level] %d{dd.MM.yyyy HH:mm:ss} %t [%c{1}] - %msg%n">
+                </MarkerPatternSelector>
+                -->
+            </PatternLayout>
+            
+            <Policies>
+                <SizeBasedTriggeringPolicy size="3500 KB" />
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+            
+        </RollingFile>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="root" level="trace" additivity="true">
+            <appender-ref ref="RollingFile" level="trace"/>
+        </Logger>
+        
+        <!--<Logger name="ru.tek.uaobp" level="trace" additivity="true">
+            <appender-ref ref="RollingFile" level="trace"/>
+        </Logger>-->
+        
+        <Root level="trace" additivity="true">
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
