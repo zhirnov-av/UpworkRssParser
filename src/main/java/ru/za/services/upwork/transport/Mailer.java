@@ -25,7 +25,7 @@ public class Mailer {
             email.setSubject(String.format("[upwork-bot][%s] - %s", weight, title));
             email.setHtmlMsg(String.format("<a href=\"%s\">%s</a><br/><br/><br/>%s<br/><br/>%s", link, title, body, list) );
             email.addTo(emailAdress);
-            email.send();
+            //email.send();
         } catch (EmailException e) {
             logger.error(e.getMessage());
         }

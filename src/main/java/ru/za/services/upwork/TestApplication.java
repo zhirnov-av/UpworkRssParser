@@ -3,7 +3,12 @@ package ru.za.services.upwork;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.za.services.upwork.parser.Parser;
+import ru.za.services.upwork.parser.SendEventData;
+import ru.za.services.upwork.parser.SendEventListener;
 import ru.za.services.upwork.parser.settings.ParserSettings;
+import ru.za.services.upwork.transport.Mailer;
+import ru.za.services.upwork.transport.TelegramApplication;
+
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,7 +22,8 @@ public class TestApplication {
     private Timer mainTimer;
     private MainTimerTask mainTimerTask;
     private ParserSettings parserSettings = ParserSettings.getInstance();
-
+    private Parser parser;
+    private TelegramApplication telegramApplication = new TelegramApplication();
 
     /*
     private TestApplication() {
@@ -34,12 +40,22 @@ public class TestApplication {
     }
     */
 
+    private TestApplication(){
+
+    }
 
 
     public Status start(){
 
         mainTimer = new Timer();
         mainTimerTask = new MainTimerTask();
+
+        parser = new Parser();
+
+        parser.addEventListener(new EmailSender());
+        parser.addEventListener(new TelegramSender());
+
+        telegramApplication.startBot();
 
         mainTimer.schedule(mainTimerTask, 1000, 600 *1000);
 
@@ -51,6 +67,12 @@ public class TestApplication {
             mainTimer.cancel();
             mainTimer.purge();
             mainTimer = null;
+
+            telegramApplication.stopBot();
+
+            parser = null;
+
+
         }
 
         return status = Status.NOT_ACTIVE;
@@ -60,63 +82,11 @@ public class TestApplication {
     private class MainTimerTask extends TimerTask {
         public void run() {
             logger.info("Task started.");
-            Parser parser = new Parser();
+
             parser.doParse();
+
             logger.info("Task ended.");
         }
-        public void main(){
-
-            /*
-            Date maxDate = new Date(0);
-
-            ArrayList<UpworkFeed> upworkFeeds = new ArrayList<>();
-
-            try {
-                RSSFeedParser parser = new RSSFeedParser("https://www.upwork.com/ab/feed/jobs/rss?subcategory2=desktop_software_development&sort=renew_time_int+desc&api_params=1&q=&securityToken=c636015b813452f4796e847b381c87e69c9ca269c683f5e832e076f548ad3f8ee69bc2ec44d1b258dbdfea73c7fd6ea3489459d8d6dbe2f794a491f094b57b5a&userUid=819407936049897472&orgUid=819407936054091777");
-                Feed feed = parser.readFeed();
-
-                UpworkFeed upworkFeed = new UpworkFeed("1", feed);
-                upworkFeed.processMessages();
-                upworkFeeds.add(upworkFeed);
-
-                parser = new RSSFeedParser("https://www.upwork.com/ab/feed/jobs/rss?subcategory2=other_software_development&sort=renew_time_int+desc&api_params=1&q=&securityToken=c636015b813452f4796e847b381c87e69c9ca269c683f5e832e076f548ad3f8ee69bc2ec44d1b258dbdfea73c7fd6ea3489459d8d6dbe2f794a491f094b57b5a&userUid=819407936049897472&orgUid=819407936054091777");
-                feed = parser.readFeed();
-
-                upworkFeed = new UpworkFeed("2", feed);
-                upworkFeed.processMessages();
-                upworkFeeds.add(upworkFeed);
-
-                parser = new RSSFeedParser("https://www.upwork.com/ab/feed/jobs/rss?subcategory2=scripts_utilities&sort=renew_time_int+desc&api_params=1&q=&securityToken=c636015b813452f4796e847b381c87e69c9ca269c683f5e832e076f548ad3f8ee69bc2ec44d1b258dbdfea73c7fd6ea3489459d8d6dbe2f794a491f094b57b5a&userUid=819407936049897472&orgUid=819407936054091777");
-                feed = parser.readFeed();
-
-                upworkFeed = new UpworkFeed("3", feed);
-                upworkFeed.processMessages();
-                upworkFeeds.add(upworkFeed);
-
-            } catch (XMLStreamException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                FileOutputStream fstream = new FileOutputStream("c:\\tmp\\config.cfg", false);
-                BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(fstream));
-
-                for (UpworkFeed feed:upworkFeeds){
-                    wr.write(String.format("%s=%s", feed.getId(), feed.getLastDate().toString()));
-                    wr.newLine();
-                }
-                wr.flush();
-
-                fstream.flush();
-                fstream.close();
-            }catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            */
-        }
-
     }
 
 
@@ -126,6 +96,27 @@ public class TestApplication {
 
     public Status getStatus() {
         return status;
+    }
+
+    private class EmailSender implements SendEventListener {
+        Logger logger = LogManager.getLogger(this.getClass().getName());
+        @Override
+        public void actionPerformed(SendEventData event) {
+            if (event.getUserSettings().isSendToEmail()) {
+                logger.info(String.format("User: %s, send message to e-mail", event.getUserSettings().getEmail()));
+                Mailer.sendMail(event.getUserSettings().getEmail(), event.getMessage().getTitle(), event.getMessage().getDescription(), event.getMessage().getLink(), event.getLevel().toString(), event.getTechInfo());
+            }
+        }
+    }
+
+    private class TelegramSender implements SendEventListener{
+        Logger logger = LogManager.getLogger(this.getClass().getName());
+        @Override
+        public void actionPerformed(SendEventData event) {
+            if (event.getUserSettings().isSendToTelegram()) {
+                logger.info(String.format("User: %s, send message to telegram", event.getUserSettings().getEmail()));
+            }
+        }
     }
 
 

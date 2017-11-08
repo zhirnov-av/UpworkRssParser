@@ -2,6 +2,7 @@ package ru.za.services.upwork.parser;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.za.services.upwork.parser.settings.ParserSettings;
 import ru.za.services.upwork.parser.settings.UserSettings;
 import ru.za.services.upwork.transport.Mailer;
 import ru.za.services.upwork.rss.Feed;
@@ -12,10 +13,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UpworkFeed {
-    Feed feed;
-    Date lastDate;
-    String id;
-    UserSettings settings;
+    private Feed feed;
+    private Date lastDate;
+    private String id;
+    private UserSettings settings;
+    private Parser parser;
 
     Logger logger =  LogManager.getLogger(UpworkFeed.class.getName());
 
@@ -49,7 +51,8 @@ public class UpworkFeed {
         }
     }
 
-    public UpworkFeed(UserSettings settings, String id, Feed feed, Date lastDate){
+    public UpworkFeed(Parser parser, UserSettings settings, String id, Feed feed, Date lastDate){
+        this.parser = parser;
         this.settings = settings;
         this.feed = feed;
         this.id = id;
@@ -73,7 +76,10 @@ public class UpworkFeed {
                         case MEDIUM:
                         case LOW:
                         case TRASH:
-                            Mailer.sendMail(settings.getEmail(), message.getTitle(), message.getDescription(), message.getLink(), result.getLevel().toString(), result.getTechInfo());
+
+                            sendMessage(message, result.getLevel(), result.getTechInfo());
+
+                            //Mailer.sendMail(settings.getEmail(), message.getTitle(), message.getDescription(), message.getLink(), result.getLevel().toString(), result.getTechInfo());
                             logger.info(String.format("Message sent to %s: %s weight: %.02f", settings.getEmail(), result.getKeywordsList(), result.getSummaryWeight()));
                             break;
                             //logger.info(String.format("Message does not sent: %s weight: %.02f", result.getKeywordsList(), result.getSummaryWeight()));
@@ -168,5 +174,12 @@ public class UpworkFeed {
 
     public String getId() {
         return id;
+    }
+
+    private void sendMessage(FeedMessage message, ImportanceLevel level, String techInfo){
+        SendEventData eventData = new SendEventData(settings, message, level, techInfo);
+        for (SendEventListener listener: parser.getListeners()) {
+            listener.actionPerformed(eventData);
+        }
     }
 }

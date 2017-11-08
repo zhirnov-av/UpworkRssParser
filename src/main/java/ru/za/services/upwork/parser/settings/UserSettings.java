@@ -1,15 +1,18 @@
 package ru.za.services.upwork.parser.settings;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import ru.za.services.upwork.parser.KeywordsList;
 import ru.za.services.upwork.parser.RssUrl;
+import ru.za.services.upwork.parser.SendEventData;
+import ru.za.services.upwork.parser.SendEventListener;
+import ru.za.services.upwork.transport.Mailer;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 public class UserSettings {
     private String email = "";
@@ -19,6 +22,8 @@ public class UserSettings {
 
     private KeywordsList keywords = new KeywordsList();
     private KeywordsList exceptKeywords = new KeywordsList();
+    private boolean sendToEmail = true;
+    private boolean sendToTelegram = true;
 
     private String regEx = "";
 
@@ -150,8 +155,16 @@ public class UserSettings {
         }catch (Exception e){
             regEx = null;
         }
+
+
     }
 
+    public boolean isSendToEmail() {
+        return sendToEmail;
+    }
 
+    public boolean isSendToTelegram() {
+        return sendToTelegram;
+    }
 }
 

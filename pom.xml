@@ -90,6 +90,18 @@
             <version>20170516</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots</artifactId>
+            <version>3.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambotsextensions</artifactId>
+            <version>3.4</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -126,12 +138,12 @@
                     <terse>true</terse>
                     <echo>true</echo>
                     <debug>true</debug>
-                    <glassfishDirectory>C:\Program Files\glassfish5\</glassfishDirectory>
+                    <glassfishDirectory>C:\Program Files\glassfish-4.1.1\</glassfishDirectory>
                     <user>admin</user>
                     <adminPassword>tomohawk</adminPassword>
                     <domain>
                         <name>domain1</name>
-                        <host>localhost</host>
+                        <host>10.2.1.112</host>
                         <adminPort>4848</adminPort>
                     </domain>
                     <components>

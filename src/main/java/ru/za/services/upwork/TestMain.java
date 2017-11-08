@@ -2,6 +2,7 @@ package ru.za.services.upwork;
 
 import ru.za.services.upwork.rss.Feed;
 import ru.za.services.upwork.rss.RSSFeedParser;
+import ru.za.services.upwork.transport.TelegramApplication;
 
 import java.io.File;
 
@@ -31,6 +32,7 @@ public class TestMain {
 //
 //        System.out.println(user);
 
+        /*
         RSSFeedParser feedParser = new RSSFeedParser(new File("c:\\test\\rss.xml"));
         try {
             Feed feed = feedParser.readFeed();
@@ -45,6 +47,10 @@ public class TestMain {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
+
+        TelegramApplication app = new TelegramApplication();
+        app.startBot();
 
     }
 

@@ -3,10 +3,10 @@ package ru.za.services.upwork.parser.settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
+import ru.za.services.upwork.parser.SendEventListener;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ParserSettings {
     private static ParserSettings ourInstance = new ParserSettings();
@@ -17,6 +17,7 @@ public class ParserSettings {
     private List<UserSettings> usersSettings = new ArrayList<UserSettings>();
 
     private String emailPassword;
+
 
     //private ArrayList<RssUrl> rssUrls = new ArrayList<>();
     //private ArrayList<String> neededWords = new ArrayList<>();
@@ -133,4 +134,5 @@ public class ParserSettings {
     public String getEmailPassword() {
         return emailPassword;
     }
+
 }
