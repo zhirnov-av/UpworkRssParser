@@ -23,7 +23,7 @@ public class TestApplication {
     private MainTimerTask mainTimerTask;
     private ParserSettings parserSettings = ParserSettings.getInstance();
     private Parser parser;
-    private TelegramApplication telegramApplication = new TelegramApplication();
+    private TelegramApplication telegramApplication = TelegramApplication.getInstance();
 
     /*
     private TestApplication() {
@@ -113,8 +113,10 @@ public class TestApplication {
         Logger logger = LogManager.getLogger(this.getClass().getName());
         @Override
         public void actionPerformed(SendEventData event) {
-            if (event.getUserSettings().isSendToTelegram()) {
+            if (event.getUserSettings().getTelegramId() != null) {
                 logger.info(String.format("User: %s, send message to telegram", event.getUserSettings().getEmail()));
+                TelegramApplication app = TelegramApplication.getInstance();
+                app.sendMessage(event.getUserSettings().getTelegramId(), event.getMessage().getTitle());
             }
         }
     }

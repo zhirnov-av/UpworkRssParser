@@ -48,9 +48,10 @@ public class TestMain {
             e.printStackTrace();
         }
         */
-
+        /*
         TelegramApplication app = new TelegramApplication();
         app.startBot();
+        */
 
     }
 

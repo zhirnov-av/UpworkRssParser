@@ -23,7 +23,7 @@ public class UserSettings {
     private KeywordsList keywords = new KeywordsList();
     private KeywordsList exceptKeywords = new KeywordsList();
     private boolean sendToEmail = true;
-    private boolean sendToTelegram = true;
+    private String telegramId = null;
 
     private String regEx = "";
 
@@ -163,8 +163,13 @@ public class UserSettings {
         return sendToEmail;
     }
 
-    public boolean isSendToTelegram() {
-        return sendToTelegram;
+
+    public void setTelegramId(String telegramId) {
+        this.telegramId = telegramId;
+    }
+
+    public String getTelegramId() {
+        return telegramId;
     }
 }
 
