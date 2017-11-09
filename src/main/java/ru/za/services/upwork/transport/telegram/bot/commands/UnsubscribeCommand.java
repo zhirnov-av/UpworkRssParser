@@ -9,10 +9,10 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import ru.za.services.upwork.parser.settings.ParserSettings;
 import ru.za.services.upwork.parser.settings.UserSettings;
 
-public class SubscribeCommand extends BotCommand {
+public class UnsubscribeCommand extends BotCommand {
 
-    public SubscribeCommand(){
-        super("subscribe", "Subscribe to parser");
+    public UnsubscribeCommand(){
+        super("unsubscribe", "Unsubscribe to parser");
     }
 
     @Override
@@ -24,7 +24,7 @@ public class SubscribeCommand extends BotCommand {
             ParserSettings parserSettings = ParserSettings.getInstance();
             for (UserSettings settings: parserSettings.getUsersSettings()) {
                 if (settings.getEmail().equals(strings[0])){
-                    settings.setTelegramId(user.getId().toString());
+                    settings.setTelegramId(null);
                     flagFound = true;
                 }
             }

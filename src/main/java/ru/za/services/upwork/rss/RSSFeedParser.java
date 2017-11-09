@@ -46,9 +46,9 @@ public class RSSFeedParser {
 
         HttpGet httpGet = new HttpGet(feedUrl);
         // for proxy
-        HttpHost proxy = new HttpHost("10.2.3.10", 8080);
-        RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
-        httpGet.setConfig(config);
+        //HttpHost proxy = new HttpHost("10.2.3.10", 8080);
+        //RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
+        //httpGet.setConfig(config);
         // *********
 
 

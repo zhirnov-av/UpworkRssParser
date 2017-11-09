@@ -73,16 +73,37 @@ public class UpworkFeed {
 
                     switch(result.getLevel()){
                         case HIGH:
-                        case MEDIUM:
-                        case LOW:
-                        case TRASH:
-
-                            sendMessage(message, result.getLevel(), result.getTechInfo());
-
-                            //Mailer.sendMail(settings.getEmail(), message.getTitle(), message.getDescription(), message.getLink(), result.getLevel().toString(), result.getTechInfo());
-                            logger.info(String.format("Message sent to %s: %s weight: %.02f", settings.getEmail(), result.getKeywordsList(), result.getSummaryWeight()));
+                            if (settings.getMinimumLevel().valueAnInt() <= ImportanceLevel.HIGH.valueAnInt()){
+                                sendMessage(message, result.getLevel(), result.getTechInfo());
+                                logger.info(String.format("Message sent to %s: %s weight: %.02f", settings.getEmail(), result.getKeywordsList(), result.getSummaryWeight()));
+                            }
                             break;
-                            //logger.info(String.format("Message does not sent: %s weight: %.02f", result.getKeywordsList(), result.getSummaryWeight()));
+                        case MEDIUM:
+                            if (settings.getMinimumLevel().valueAnInt() <= ImportanceLevel.MEDIUM.valueAnInt()){
+                                sendMessage(message, result.getLevel(), result.getTechInfo());
+                                logger.info(String.format("Message sent to %s: %s weight: %.02f", settings.getEmail(), result.getKeywordsList(), result.getSummaryWeight()));
+                            }
+                            break;
+                        case LOW:
+                            if (settings.getMinimumLevel().valueAnInt() <= ImportanceLevel.LOW.valueAnInt()){
+                                sendMessage(message, result.getLevel(), result.getTechInfo());
+                                logger.info(String.format("Message sent to %s: %s weight: %.02f", settings.getEmail(), result.getKeywordsList(), result.getSummaryWeight()));
+                            }
+                            break;
+                        case TRASH:
+                            if (settings.getMinimumLevel().valueAnInt() <= ImportanceLevel.TRASH.valueAnInt()){
+                                sendMessage(message, result.getLevel(), result.getTechInfo());
+                                logger.info(String.format("Message sent to %s: %s weight: %.02f", settings.getEmail(), result.getKeywordsList(), result.getSummaryWeight()));
+                            }
+                            break;
+                        default:
+                            //sendMessage(message, result.getLevel(), result.getTechInfo());
+                            logger.info(String.format("Message level: %s / %s weight: %.02f", result.getLevel().toString(), result.getKeywordsList(), result.getSummaryWeight()));
+                    }
+                    for(int j = 0; j < settings.getRssUrls().size(); j++){
+                        if(settings.getRssUrls().get(j).getId().equals(this.id)){
+                            settings.getRssUrls().get(j).setLastScan(lastDate);
+                        }
                     }
 
                 }else{
@@ -96,11 +117,6 @@ public class UpworkFeed {
                     }
                 }
 
-            }
-        }
-        for(int i = 0; i < settings.getRssUrls().size(); i++){
-            if(settings.getRssUrls().get(i).getId().equals(this.id)){
-                settings.getRssUrls().get(i).setLastScan(lastDate);
             }
         }
     }

@@ -1,21 +1,14 @@
 package ru.za.services.upwork.transport;
 
-import org.apache.http.HttpHost;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
+import org.telegram.telegrambots.api.methods.ParseMode;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
-import org.telegram.telegrambots.bots.DefaultBotOptions;
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.generics.BotSession;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ru.za.services.upwork.TestApplication;
-import ru.za.services.upwork.transport.telegram.bot.BotEvent;
 import ru.za.services.upwork.transport.telegram.bot.SenderBot;
-import ru.za.services.upwork.transport.telegram.bot.TelegramEventListener;
 
 public class TelegramApplication {
     private BotSession botSession;
@@ -30,6 +23,7 @@ public class TelegramApplication {
 
 
     public void startBot(){
+        /*
         HttpHost proxy = new HttpHost("10.2.3.10", 8080);
         RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
         DefaultBotOptions options = new DefaultBotOptions();
@@ -37,16 +31,17 @@ public class TelegramApplication {
 
         options.setRequestConfig(config);
         session.setOptions(options);
+        */
 
         ApiContextInitializer.init();
         TelegramBotsApi botsApi = new TelegramBotsApi();
 
-        bot = new SenderBot(options);
+        bot = new SenderBot();
 
+        /*
         bot.getOptions().setRequestConfig(config);
+        */
 
-
-        bot.addEventListener(new EventProcessor());
         try {
 
             botSession = botsApi.registerBot(bot);
@@ -63,29 +58,23 @@ public class TelegramApplication {
         }
     }
 
-    public void sendMessage(String chatId, String title){
+    public void sendMessage(String chatId, String message){
+
+        message = message.replace("<br>", "\n");
+        message = message.replace("<br />", "\n");
+
         SendMessage echoMessage = new SendMessage();
         echoMessage.setChatId(chatId);
-        echoMessage.setText(title);
+        echoMessage.setText(message);
+        echoMessage.enableHtml(true);
+        echoMessage.setParseMode(ParseMode.HTML);
+        echoMessage.enableWebPagePreview();
         try {
             bot.execute(echoMessage);
         } catch (TelegramApiException e) {
+            Logger logger = LogManager.getLogger(this.getClass().getName());
+            logger.error(e.getMessage());
             e.printStackTrace();
-        }
-    }
-
-    private class EventProcessor implements TelegramEventListener{
-
-        @Override
-        public void actionPerformed(BotEvent event) {
-            switch (event.getCommand()){
-                case SUBSCRIBE:
-                    logger.info("SUBSCRIBE command");
-                    break;
-                case LIST_USERS:
-                    logger.info("LIST_USERS command");
-                    break;
-            }
         }
     }
 

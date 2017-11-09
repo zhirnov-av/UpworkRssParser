@@ -8,8 +8,7 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
-import ru.za.services.upwork.transport.telegram.bot.commands.SubscribeCommand;
-import ru.za.services.upwork.transport.telegram.bot.commands.UserListCommand;
+import ru.za.services.upwork.transport.telegram.bot.commands.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,12 +16,25 @@ import java.util.Set;
 //CommandBot
 public class SenderBot extends TelegramLongPollingCommandBot {
 
-    private Set<TelegramEventListener> eventListeners = new HashSet<>();
-
     public SenderBot(DefaultBotOptions options){
-        super(options, "@Subchik2Bot");
+        super(options, "@Subchik");
+        registerCommands();
+    }
+
+    public SenderBot(){
+        super("@Subchik");
+        registerCommands();
+    }
+
+    public void registerCommands(){
         register(new UserListCommand());
         register(new SubscribeCommand());
+        register(new UnsubscribeCommand());
+        register(new StartParsingCommand());
+        register(new StopParsingCommand());
+        register(new ChangeLevelCommand());
+        register(new SelectLevelCommand());
+        register(new ParseNowCommand());
     }
 
     /*
@@ -60,6 +72,14 @@ public class SenderBot extends TelegramLongPollingCommandBot {
                 if (split[1] != null){
                     SubscribeCommand command = new SubscribeCommand();
                     command.execute(this, query.getFrom(), query.getMessage().getChat(), new String[]{split[1]});
+                }
+            }
+
+            if (query.getData().contains("/level")){
+                String[] split = query.getData().split(" ");
+                if (split[1] != null && split[2] != null){
+                    ChangeLevelCommand command = new ChangeLevelCommand();
+                    command.execute(this, query.getFrom(), query.getMessage().getChat(), new String[]{split[1], split[2]});
                 }
             }
 
@@ -107,19 +127,10 @@ public class SenderBot extends TelegramLongPollingCommandBot {
 
     @Override
     public String getBotToken() {
-        return "462910253:AAF27l3KqWZl-vve7ZsTQQRpplDPEJiLnl8";
+        return "473405530:AAEPQM5ctz_jAfj1xF5nXNSBUJlchl7hvbk";
              //"462910253:AAF27l3KqWZl-vve7ZsTQQRpplDPEJiLnl8"
     }
 
-    public void addEventListener(TelegramEventListener listener){
-        eventListeners.add(listener);
-    }
-
-    public void callListeners(BotEvent event){
-        for (TelegramEventListener listener: eventListeners) {
-            listener.actionPerformed(event);
-        }
-    }
 
 
     /*

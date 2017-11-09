@@ -41,21 +41,32 @@ public class TestApplication {
     */
 
     private TestApplication(){
-
+        telegramApplication.startBot();
+        //mainTimer = new Timer();
+        //mainTimerTask = new MainTimerTask();
     }
 
+    public void startParsing(){
+        if (parser == null){
+            parser = new Parser();
+
+            parser.addEventListener(new EmailSender());
+            parser.addEventListener(new TelegramSender());
+
+            parser.doParse();
+        }else{
+            parser.doParse();
+        }
+    }
 
     public Status start(){
-
-        mainTimer = new Timer();
-        mainTimerTask = new MainTimerTask();
-
         parser = new Parser();
 
         parser.addEventListener(new EmailSender());
         parser.addEventListener(new TelegramSender());
 
-        telegramApplication.startBot();
+        mainTimer = new Timer();
+        mainTimerTask = new MainTimerTask();
 
         mainTimer.schedule(mainTimerTask, 1000, 600 *1000);
 
@@ -65,14 +76,12 @@ public class TestApplication {
     public Status stop(){
         if (mainTimer != null){
             mainTimer.cancel();
-            mainTimer.purge();
             mainTimer = null;
 
-            telegramApplication.stopBot();
+            mainTimerTask.cancel();
+            mainTimerTask = null;
 
             parser = null;
-
-
         }
 
         return status = Status.NOT_ACTIVE;
@@ -87,6 +96,7 @@ public class TestApplication {
 
             logger.info("Task ended.");
         }
+
     }
 
 
@@ -115,8 +125,11 @@ public class TestApplication {
         public void actionPerformed(SendEventData event) {
             if (event.getUserSettings().getTelegramId() != null) {
                 logger.info(String.format("User: %s, send message to telegram", event.getUserSettings().getEmail()));
+
+                String message = String.format("%s\n<a href=\"%s\">%s</a>\n%s", event.getLevel().toString(), event.getMessage().getLink(), event.getMessage().getTitle(), event.getMessage().getDescription());
+
                 TelegramApplication app = TelegramApplication.getInstance();
-                app.sendMessage(event.getUserSettings().getTelegramId(), event.getMessage().getTitle());
+                app.sendMessage(event.getUserSettings().getTelegramId(), message);
             }
         }
     }

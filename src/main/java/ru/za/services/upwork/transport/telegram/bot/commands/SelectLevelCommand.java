@@ -3,32 +3,25 @@ package ru.za.services.upwork.transport.telegram.bot.commands;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.telegram.telegrambots.api.methods.AnswerCallbackQuery;
-import org.telegram.telegrambots.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
-import org.telegram.telegrambots.api.objects.CallbackQuery;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
-import org.telegram.telegrambots.api.objects.inlinequery.InlineQuery;
-import org.telegram.telegrambots.api.objects.inlinequery.inputmessagecontent.InputTextMessageContent;
-import org.telegram.telegrambots.api.objects.inlinequery.result.InlineQueryResult;
-import org.telegram.telegrambots.api.objects.inlinequery.result.InlineQueryResultArticle;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.bots.commandbot.commands.BotCommand;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.exceptions.TelegramApiValidationException;
-import ru.za.services.upwork.parser.Parser;
+import ru.za.services.upwork.parser.ImportanceLevel;
 import ru.za.services.upwork.parser.settings.ParserSettings;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserListCommand extends BotCommand {
+public class SelectLevelCommand extends BotCommand {
 
-    public UserListCommand(){
-        super("userlist", "Get list parsing settings");
+    public SelectLevelCommand(){
+        super("selectlevel", "Change minimum level");
     }
 
     @Override
@@ -36,14 +29,35 @@ public class UserListCommand extends BotCommand {
         InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup();
 
         ParserSettings parserSettings = ParserSettings.getInstance();
+        ImportanceLevel currentLevel = null;
 
+        for(int i = 0; i < parserSettings.getUsersSettings().size(); i++){
+            if (parserSettings.getUsersSettings().get(i).getEmail().equals(strings[0])){
+                currentLevel = parserSettings.getUsersSettings().get(i).getMinimumLevel();
+                break;
+            }
+        }
+
+        if (currentLevel == null){
+            SendMessage answer = new SendMessage();
+            answer.setChatId(chat.getId().toString());
+            answer.enableWebPagePreview();
+            answer.setText(String.format("Can't find settings for user: %s", strings[0]));
+
+            try {
+                absSender.execute(answer);
+            } catch (TelegramApiException e) {
+                Logger logger = LogManager.getLogger(this.getClass().getName());
+                logger.error(e.getMessage());
+            }
+            return;
+        }
 
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        for(int i = 0; i < parserSettings.getUsersSettings().size(); i++) {
+        for(int i = 0; i < ImportanceLevel.values().length; i++) {
             List<InlineKeyboardButton> keyboardRow = new ArrayList<>();
-            keyboardRow.add(new InlineKeyboardButton(parserSettings.getUsersSettings().get(i).getEmail())
-                    .setCallbackData(String.format("/subscribe %s", parserSettings.getUsersSettings().get(i).getEmail()))
-                    .setSwitchInlineQuery(String.format("%d", i)));
+            keyboardRow.add(new InlineKeyboardButton(ImportanceLevel.values()[i].toString())
+                    .setCallbackData(String.format("/level %s %d", strings[0], ImportanceLevel.values()[i].valueAnInt())));
             keyboard.add(keyboardRow);
         }
         keyboardMarkup.setKeyboard(keyboard);
@@ -60,8 +74,7 @@ public class UserListCommand extends BotCommand {
 
         answer.enableMarkdown(true);
         answer.enableWebPagePreview();
-        answer.setText("Choose settings to subscribe");
-
+        answer.setText(String.format("Current level: %s\nChoose new:", currentLevel.toString()));
 
         try {
             absSender.execute(answer);

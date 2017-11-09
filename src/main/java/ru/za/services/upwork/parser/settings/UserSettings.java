@@ -4,10 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import ru.za.services.upwork.parser.KeywordsList;
-import ru.za.services.upwork.parser.RssUrl;
-import ru.za.services.upwork.parser.SendEventData;
-import ru.za.services.upwork.parser.SendEventListener;
+import ru.za.services.upwork.parser.*;
 import ru.za.services.upwork.transport.Mailer;
 
 import java.text.ParseException;
@@ -24,6 +21,8 @@ public class UserSettings {
     private KeywordsList exceptKeywords = new KeywordsList();
     private boolean sendToEmail = true;
     private String telegramId = null;
+
+    private ImportanceLevel minimumLevel = ImportanceLevel.MEDIUM;
 
     private String regEx = "";
 
@@ -156,7 +155,12 @@ public class UserSettings {
             regEx = null;
         }
 
-
+        telegramId = (String)object.get("telegramId");
+        try {
+            minimumLevel = ImportanceLevel.fromString(object.get("minimumLevel").toString());
+        }catch (Exception e){
+            minimumLevel = ImportanceLevel.MEDIUM;
+        }
     }
 
     public boolean isSendToEmail() {
@@ -170,6 +174,14 @@ public class UserSettings {
 
     public String getTelegramId() {
         return telegramId;
+    }
+
+    public ImportanceLevel getMinimumLevel() {
+        return minimumLevel;
+    }
+
+    public void setMinimumLevel(ImportanceLevel minimumLevel) {
+        this.minimumLevel = minimumLevel;
     }
 }
 
